@@ -1,14 +1,17 @@
 {
-  "name": "escape-room-controller",
+  "name": "escape-room-control",
   "version": "1.0.0",
+  "description": "Escape Room Control Panel with Login",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "twilio": "^4.15.0"
+    "express-session": "^1.17.3",
+    "twilio": "^4.14.0"
   }
 }

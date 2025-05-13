@@ -1,21 +1,76 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
 const twilio = require('twilio');
-const path = require('path'); // To resolve file paths
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Serve the index.html file when visiting the root URL
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html')); // Ensure your index.html file is in the same directory
+// Session setup
+app.use(session({
+  secret: 'super_secret_key', // Use a strong secret in production
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Serve static files (optional if you want to use styles/images from /public folder)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Dummy user for login (replace with DB logic later if needed)
+const users = {
+  admin: {
+    username: 'admin',
+    passwordHash: bcrypt.hashSync('password123', 10)
+  }
+};
+
+// Auth middleware
+function isAuthenticated(req, res, next) {
+  if (req.session.user) {
+    return next();
+  }
+  res.redirect('/login');
+}
+
+// Serve login page
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-// The existing /trigger POST route
-app.post('/trigger', async (req, res) => {
+// Handle login submission
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = users[username];
+
+  if (user && bcrypt.compareSync(password, user.passwordHash)) {
+    req.session.user = username;
+    res.redirect('/');
+  } else {
+    res.send('Invalid credentials. <a href="/login">Try again</a>.');
+  }
+});
+
+// Logout route
+app.get('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/login');
+  });
+});
+
+// ✅ Protected: Serve index.html only if logged in
+app.get('/', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ✅ Protected: Handle Twilio trigger POST request
+app.post('/trigger', isAuthenticated, async (req, res) => {
   const { phone, step } = req.body;
   const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
