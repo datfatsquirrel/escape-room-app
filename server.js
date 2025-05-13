@@ -8,6 +8,11 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+// Handle GET requests to root URL
+app.get('/', (req, res) => {
+  res.send('Welcome to the Twilio call trigger app!');
+});
+
 app.post('/trigger', async (req, res) => {
   const { phone, step } = req.body;
   const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
