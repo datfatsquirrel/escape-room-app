@@ -3,45 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Escape Room Control</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #0d1117;
-      color: #c9d1d9;
-      text-align: center;
-      padding: 50px;
-    }
-    h1 {
-      color: #58a6ff;
-    }
-    form {
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    input[type="tel"] {
-      padding: 10px;
-      font-size: 16px;
-      width: 100%;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      border: 1px solid #30363d;
-      background-color: #161b22;
-      color: #c9d1d9;
-    }
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #238636;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #2ea043;
-    }
-  </style>
 </head>
 <body>
   <h1>Escape Room Control Panel</h1>
@@ -69,6 +30,7 @@
           .catch(err => alert('Error: ' + err));
       };
       buttonsDiv.appendChild(btn);
+      buttonsDiv.appendChild(document.createElement('br'));
     }
   </script>
 </body>
