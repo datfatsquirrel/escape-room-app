@@ -1,10 +1,17 @@
 const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const twilio = require('twilio');
+require('dotenv').config();
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Serve static files from current directory
+
 const session = require('express-session');
 const path = require('path');
 const bodyParser = require('body-parser');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
 
 const USERNAME = process.env.AUTH_USER || 'admin';
 const PASSWORD = process.env.AUTH_PASS || 'secret';
@@ -47,14 +54,36 @@ app.get('/logout', (req, res) => {
 });
 
 app.use(authMiddleware);
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/trigger', (req, res) => {
+app.use(express.static(path.join(__dirname)));
+
+app.use(bodyParser.json());
+
+app.post('/trigger', async (req, res) => {
   const { phone, step } = req.body;
-  console.log(`Triggering step ${step} for phone ${phone}`);
-  res.send(`Triggered step ${step} for ${phone}`);
+  const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+  try {
+    await client.studio.flows(process.env.TWILIO_FLOW_SID)
+      .executions
+      .create({
+        to: phone,
+        from: process.env.TWILIO_FROM_NUMBER,
+        parameters: { step: String(step) }
+      });
+
+    res.send('Call triggered for step ' + step);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error triggering call: ' + error.message);
+  }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+// Catch-all route for root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
