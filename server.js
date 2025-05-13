@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const twilio = require('twilio');
+const path = require('path'); // To resolve file paths
 require('dotenv').config();
 
 const app = express();
@@ -8,11 +9,12 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-// Handle GET requests to root URL
+// Serve the index.html file when visiting the root URL
 app.get('/', (req, res) => {
-  res.send('Welcome to the Twilio call trigger app!');
+  res.sendFile(path.join(__dirname, 'index.html')); // Ensure your index.html file is in the same directory
 });
 
+// The existing /trigger POST route
 app.post('/trigger', async (req, res) => {
   const { phone, step } = req.body;
   const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
