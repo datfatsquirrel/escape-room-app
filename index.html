@@ -3,13 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <title>Escape Room Control</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    #buttons button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    #buttons button:hover {
+      background-color: #2980b9;
+    }
+  </style>
 </head>
 <body>
-  <h1>Escape Room Control Panel</h1>
   <form id="callForm">
+    <h1>Escape Room Control Panel</h1>
     <label for="phone">Phone Number:</label>
     <input type="tel" id="phone" name="phone" required>
-    <br><br>
     <div id="buttons"></div>
   </form>
 
@@ -30,7 +88,6 @@
           .catch(err => alert('Error: ' + err));
       };
       buttonsDiv.appendChild(btn);
-      buttonsDiv.appendChild(document.createElement('br'));
     }
   </script>
 </body>
