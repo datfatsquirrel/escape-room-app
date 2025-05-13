@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Escape Room Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0d1117;
+      color: #c9d1d9;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #58a6ff;
+    }
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    input[type="tel"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #30363d;
+      background-color: #161b22;
+      color: #c9d1d9;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #238636;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2ea043;
+    }
+  </style>
+</head>
+<body>
+  <h1>Escape Room Control Panel</h1>
+  <form id="callForm">
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" required>
+    <br><br>
+    <div id="buttons"></div>
+  </form>
+
+  <script>
+    const buttonsDiv = document.getElementById('buttons');
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement('button');
+      btn.textContent = 'Trigger Step ' + i;
+      btn.type = 'button';
+      btn.onclick = () => {
+        const phone = document.getElementById('phone').value;
+        fetch('/trigger', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, step: i })
+        }).then(res => res.text())
+          .then(alert)
+          .catch(err => alert('Error: ' + err));
+      };
+      buttonsDiv.appendChild(btn);
+    }
+  </script>
+</body>
+</html>
