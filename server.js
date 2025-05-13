@@ -23,11 +23,16 @@ app.use(session({
 // Serve static files (optional if you want to use styles/images from /public folder)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Dummy user for login (replace with DB logic later if needed)
+// Use env vars for login credentials
+const loginUsername = process.env.LOGIN_USERNAME;
+const loginPassword = process.env.LOGIN_PASSWORD;
+const loginPasswordHash = bcrypt.hashSync(loginPassword, 10);
+
+// Auth check using session
 const users = {
-  admin: {
-    username: 'admin',
-    passwordHash: bcrypt.hashSync('password123', 10)
+  [loginUsername]: {
+    username: loginUsername,
+    passwordHash: loginPasswordHash
   }
 };
 
