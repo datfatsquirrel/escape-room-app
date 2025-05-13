@@ -10,8 +10,6 @@ const port = process.env.PORT || 3000;
 // Serve static files from current directory
 
 const session = require('express-session');
-const path = require('path');
-const bodyParser = require('body-parser');
 
 const USERNAME = process.env.AUTH_USER || 'admin';
 const PASSWORD = process.env.AUTH_PASS || 'secret';
